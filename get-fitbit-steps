@@ -1,0 +1,117 @@
+#!/usr/bin/python
+#
+# many thanks to the reference article at:
+#    https://towardsdatascience.com/collect-your-own-fitbit-data-with-python-ff145fa10873"
+#
+
+from __future__ import print_function
+
+import sys
+import time
+import fitbit
+import gather_keys_oauth2 as Oauth2
+import datetime
+
+import sys
+import yaml
+import calendar
+
+#--- read the yaml file ----
+
+fname = "config.yml"
+try:
+    with open(fname, "r") as ymlfile:
+        cfg = yaml.load(ymlfile)['fitbitAppCredentials']
+except IOError as e:
+    print ("exiting - cannot read file:", fname)
+    sys.exit(1)
+
+#--- read the tokens file ---
+
+fname = "tokens.yml"
+try:
+    with open(fname, "r") as ymlfile:
+        tokens = yaml.load(ymlfile)['fitbitTokens']
+except IOError as e:
+    print ("exiting - cannot read file:", fname)
+    sys.exit(1)
+
+if (time.time() > tokens['EXPIRES_AT']):
+    token_expired = True
+else:
+    token_expired = False
+
+if 'ACCESS_TOKEN' in tokens:
+    ACCESS_TOKEN = tokens['ACCESS_TOKEN']
+else:
+    # if missing, just call the yml file invalid
+    token_expired = True
+
+if 'REFRESH_TOKEN' in tokens:
+    REFRESH_TOKEN = tokens['REFRESH_TOKEN']
+else:
+    # if missing, just call the yml file invalid
+    token_expired = True
+
+#--- make sure the expected key/value pairs are there ---
+
+if 'CLIENT_ID' in cfg:
+    CLIENT_ID = cfg['CLIENT_ID']
+else:
+    print ("exiting - no CLIENT_ID in file:", fname)
+    sys.exit(1)
+    
+if 'CLIENT_SECRET' in cfg:
+    CLIENT_SECRET = cfg['CLIENT_SECRET']
+else:
+    print ("exiting - no CLIENT_SECRET in file:", fname)
+    sys.exit(1)
+
+#----------- main below here -------------
+
+if __name__ == "__main__":
+
+    import argparse
+
+    # so complicated just to add a blank line after help output
+    parser = argparse.ArgumentParser(
+       formatter_class=argparse.RawDescriptionHelpFormatter,
+       epilog="""
+       """,
+    )
+    group = parser.add_argument_group("mandatory parameters")
+    group.add_argument("--begin", "-b", action="store", dest="begin", help="YYYY-MM-DD")
+    group.add_argument("--end",   "-e", action="store", dest="end",   help="YYYY-MM-DD")
+
+    args = parser.parse_args()
+
+    if (not args.begin) or (not args.end):
+        print ("\n# exiting - must specify date range to query")
+        parser.print_usage()
+        print ()
+        sys.exit(1)
+
+    #--- get a new token if the saved one has expired
+    #    unfortunately this opens a web browser to provide feedback
+    #    and provides rather noisy output
+    if (token_expired): 
+       server = Oauth2.OAuth2Server(CLIENT_ID, CLIENT_SECRET)
+       server.browser_authorize()
+       ACCESS_TOKEN = str(server.fitbit.client.session.token['access_token'])
+       REFRESH_TOKEN = str(server.fitbit.client.session.token['refresh_token'])
+       EXPIRES_AT = str(server.fitbit.client.session.token['expires_at'])
+ 
+    # authenticate using the tokens above
+    auth2_client = fitbit.Fitbit(CLIENT_ID, CLIENT_SECRET, oauth2=True, access_token=ACCESS_TOKEN, refresh_token=REFRESH_TOKEN)
+
+    # this gets the daily totals for a specified period
+    timeSeries = auth2_client.time_series('activities/steps', base_date=args.begin, end_date=args.end)
+    for d in timeSeries['activities-steps']:
+        print (d['dateTime'] + "\t" + d['value'])
+
+    sys.exit(0)
+
+# source config file for key+secret
+#
+# how to stop web popup from gather keys ?
+#

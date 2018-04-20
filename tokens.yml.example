@@ -1,0 +1,18 @@
+---
+
+# These are bogus tokens but it shows how to save them
+# so that the python script doesn't query for new tokens
+# every run.
+#
+# To request new tokens that are valid for the default 8 hours,
+# run:
+#   python gather_keys_oauth2.py CLIENT_ID CLIENT_SECRET
+# where:
+#   CLIENT_ID and CLIENT_SECRET are the values for your app
+#   which you should have saved in config.yml already
+#
+
+fitbitTokens:
+    ACCESS_TOKEN:  yourTokenHerezI1NiJ9.eyJzdWIiOiIyNFlCUTgiLCJhdWQiOiIyMkNWNUYiLCJpc3MiOiJGaXRiaXQiLCJ0eXAiOiJhY2Nlc3NfdG9rZW4iLCJzY29wZXMiOiJyc29jIHJzZXQgcmFjdCBybG9jIHJ3ZWkgcmhyIHJudXQgcnBybyByc2xlIiwiZXhwIjoxNTI0MjgzMDM3LCJpYXQiOjE1MjQyNTQyMzd9.Zs4ViD03ONyn0luQ9quI5qk522UCJ1HYeaX6yK45kX0
+    REFRESH_TOKEN:  yourRefreshTokenHere14f78848a4d602a8bcae8220b7c6ff05563ec0b7b023
+    EXPIRES_AT:     1524283037.18

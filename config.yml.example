@@ -1,0 +1,11 @@
+---
+#
+# these should match your registered fitbit app values
+#
+# IMPORTANT - TREAT THIS FILE LIKE PRIVATE KEYS
+#             DO NOT SAVE ANYWHERE PUBLICALLY READABLE !
+
+fitbitAppCredentials:
+    CLIENT_ID:      '123456'
+    CLIENT_SECRET:  '12345678901234567890123456789012'
+
