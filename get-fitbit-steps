@@ -110,8 +110,3 @@ if __name__ == "__main__":
         print (d['dateTime'] + "\t" + d['value'])
 
     sys.exit(0)
-
-# source config file for key+secret
-#
-# how to stop web popup from gather keys ?
-#
