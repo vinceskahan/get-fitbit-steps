@@ -1,5 +1,7 @@
 #!/usr/bin/python
 #
+# get-fitbit-steps: get your fitbit daily step counts 'quickly'
+#
 # many thanks to the reference article at:
 #    https://towardsdatascience.com/collect-your-own-fitbit-data-with-python-ff145fa10873"
 #
@@ -77,6 +79,7 @@ if __name__ == "__main__":
     parser = argparse.ArgumentParser(
        formatter_class=argparse.RawDescriptionHelpFormatter,
        epilog="""
+(you can ask up to two years of data in one request)
        """,
     )
     group = parser.add_argument_group("mandatory parameters")
@@ -105,7 +108,14 @@ if __name__ == "__main__":
     auth2_client = fitbit.Fitbit(CLIENT_ID, CLIENT_SECRET, oauth2=True, access_token=ACCESS_TOKEN, refresh_token=REFRESH_TOKEN)
 
     # this gets the daily totals for a specified period
-    timeSeries = auth2_client.time_series('activities/steps', base_date=args.begin, end_date=args.end)
+
+    try:
+        timeSeries = auth2_client.time_series('activities/steps', base_date=args.begin, end_date=args.end)
+    except (Exception) as e:
+        print ("#----- exception -----")
+        print (e)
+        sys.exit(1)
+
     for d in timeSeries['activities-steps']:
         print (d['dateTime'] + "\t" + d['value'])
 
