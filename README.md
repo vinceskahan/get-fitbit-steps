@@ -50,10 +50,8 @@ Tokens are typically good for 8 hours by default.  If you want to save tokens to
 
 If you save tokens to `tokens.yml`, subsequent runs of this program will just output the step count for the day(s) specified until the token expires, at which it will revert to the default 'request a new token every run' behavior.
 
-### Install the cherrypy python library
-
-`sudo pip install cherrypy`
-
+### Install required python libraries
+`sudo pip install cherrypy pyaml fitbit`
 
 ### Try it out
 
@@ -69,8 +67,11 @@ If you save tokens to `tokens.yml`, subsequent runs of this program will just ou
 * specify one date (set begin+end the same)
 `python get-fitbit-steps --begin 2018-01-15 --end 2018-01-15`
 
+### CLI-only notes
 
-## Acknowledgements
+Unfortunately `cherrypy` opens a browser windows on localhost, so you cannot currently run this program in a text-only session such as under Vagrant via ssh or the like.
+
+### Acknowledgements
 
 Many thanks to the author of the reference article at:
 https://towardsdatascience.com/collect-your-own-fitbit-data-with-python-ff145fa10873
