@@ -67,6 +67,11 @@ If you save tokens to `tokens.yml`, subsequent runs of this program will just ou
 * specify one date (set begin+end the same)
 `python get-fitbit-steps --begin 2018-01-15 --end 2018-01-15`
 
+### Python version compatibility
+
+* python 2.7 seems to be required by cherrypy (sorry centos-6 users)
+* python 2.7 also seems to be required by gather_keys_oauth2.py (copied here from upstream)
+
 ### CLI-only notes
 
 Unfortunately `cherrypy` opens a browser windows on localhost, so you cannot currently run this program in a text-only session such as under Vagrant via ssh or the like.
